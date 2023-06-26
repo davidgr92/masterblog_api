@@ -16,6 +16,11 @@ logging.basicConfig(level=logging.INFO,  # Configure basic logging
 
 POST_KEYS = ["title", "content", "author", "date"]
 
+# TODO: Fix Javascript so that it opens a popup with a form
+#  and once form is sent, it sends an API request to update.
+#  (needs to auto populate a hidden ID field to know which post to update,
+#  also once finished loads all posts again)
+
 
 def validate_post_input(data):
     for key in POST_KEYS:
@@ -154,6 +159,6 @@ def search_posts():
 
 
 if __name__ == '__main__':
-    storage = StorageJson('post.json')
+    storage = StorageJson('posts.json')
     POSTS = storage.list_posts()
     app.run(host="0.0.0.0", port=5002, debug=True)

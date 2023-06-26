@@ -27,8 +27,11 @@ function loadPosts() {
             data.forEach(post => {
                 const postDiv = document.createElement('div');
                 postDiv.className = 'post';
-                postDiv.innerHTML = `<h2>${post.title}</h2><p>${post.content}</p>
-                <button onclick="deletePost(${post.id})">Delete</button>`;
+                postDiv.innerHTML = `<h2>${post.title}</h2><p class="subtitle">Created by ${post.author} at ${post.date}</p><p>${post.content}</p>
+                <div class="btns">
+                <button class="delete-btn" onclick="deletePost(${post.id})">Delete</button>
+                <button class="update-btn" onclick="openPopup(${post.id})">Update</button>
+                </div>`;
                 postContainer.appendChild(postDiv);
             });
         })
@@ -41,12 +44,21 @@ function addPost() {
     var baseUrl = document.getElementById('api-base-url').value;
     var postTitle = document.getElementById('post-title').value;
     var postContent = document.getElementById('post-content').value;
+    var postAuthor = document.getElementById('post-author').value;
+
+    // Generate today's date in "YYYY-MM-DD" format
+    var currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    var day = String(currentDate.getDate()).padStart(2, '0');
+    var postDate = year + '-' + month + '-' + day;
 
     // Use the Fetch API to send a POST request to the /posts endpoint
     fetch(baseUrl + '/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: postTitle, content: postContent })
+        body: JSON.stringify({ title: postTitle, content: postContent,
+        author: postAuthor, date: postDate })
     })
     .then(response => response.json())  // Parse the JSON data from the response
     .then(post => {
@@ -69,4 +81,65 @@ function deletePost(postId) {
         loadPosts(); // Reload the posts after deleting one
     })
     .catch(error => console.error('Error:', error));  // If an error occurs, log it to the console
+}
+
+function openPopup(postId) {
+    var modal = document.getElementById('myModal');
+    modal.style.display = 'block';
+
+    var formId = document.getElementById('id');
+    var formTitle = document.getElementById('title');
+    var formContent = document.getElementById('content');
+    var formAuthor = document.getElementById('author');
+    var formDate = document.getElementById('date');
+    formId.value = postId
+    formTitle.value = '';
+    formContent.value = '';
+    formAuthor.value = '';
+    formDate.value = '';
+
+    var form = document.getElementById('updateForm');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var id = formId.value;
+        var title = formTitle.value;
+        var content = formContent.value;
+        var author = formAuthor.value;
+        var date = formDate.value;
+
+        submitData(postId, title, content, author, date);
+        closePopup();
+    });
+}
+
+function closePopup() {
+    var modal = document.getElementById('myModal');
+    modal.style.display = 'none';
+}
+
+function submitData(postId, title, content, author, date) {
+    var baseUrl = document.getElementById('api-base-url').value;
+
+    // Construct the data object
+    var data = { id: postId };
+
+    if (title !== '') {data.title = title;}
+    if (content !== '') {data.content = content;}
+    if (author !== '') {data.author = author;}
+    if (date !== '') {data.date = date;}
+
+    // Send the data as JSON via PUT request
+    fetch(baseUrl + '/posts/' + postId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log('Data submitted:', result);
+        loadPosts(); // Reload the posts after deleting one
+    })
+
+    .catch(error => console.error('Error:', error));
 }

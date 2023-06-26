@@ -17,10 +17,37 @@
         <div class="input-field">
             <input type="text" id="post-title" placeholder="Enter Post Title">
             <input type="text" id="post-content" placeholder="Enter Post Content">
+            <input type="text" id="post-author" placeholder="Enter Post Author">
+            <input type="text" id="post-date" placeholder="Enter Date (YYYY-MM-DD)">
             <button onclick="addPost()">Add Post</button>
         </div>
         <div id="post-container">
             <!-- Blog posts will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <form id="updateForm">
+                <h2>Update form</h2>
+                <div class="input-field">
+                <input type="hidden" id="id" required>
+                <label for="title">Title:</label>
+                <input type="text" id="title"><br><br>
+
+                <label for="content">Content:</label>
+                <input type="text" id="content"><br><br>
+
+                <label for="author">Author:</label>
+                <input type="text" id="author"><br><br>
+
+                <label for="date">Date:</label>
+                <input type="text" id="date"><br><br>
+
+                <input type="submit" value="Submit">
+                </div>
+            </form>
         </div>
     </div>
 

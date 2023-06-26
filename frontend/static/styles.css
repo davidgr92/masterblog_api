@@ -23,6 +23,8 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+
 }
 
 .input-field input,
@@ -45,7 +47,8 @@ body {
     color: #aaa;
 }
 
-.input-field button {
+.input-field button,
+input[type=submit] {
     background-color: #4466ee;
     color: #fff;
     cursor: pointer;
@@ -74,18 +77,83 @@ body {
     color: #333;
 }
 
+.subtitle {
+    margin-top: 5px;
+    color: black;
+    font-weight: 600;
+}
+
 .post button {
-    position: absolute;
+    /*position: absolute;
+    padding: 5px 10px;
     top: 10px;
-    right: 10px;
-    background-color: #ff4444;
+    right: 10px;*/
     color: #fff;
     border: none;
-    padding: 5px 10px;
     border-radius: 5px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
     cursor: pointer;
 }
 
-.post button:hover {
+.delete-btn {
+    background-color: #ff4444;
+}
+
+.update-btn {
+    background-color: #119902;
+}
+
+.btns {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    align-content: strech;
+    flex-direction: column;
+    top: 20px;
+    right: 20px;
+    height: inherit;
+}
+
+.delete-btn:hover {
     background-color: #cc0000;
+}
+
+.update-btn:hover {
+    background-color: #106e05;
+}
+
+
+
+/* Style for the modal popup */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#updateForm h2 {
+    text-align: center;
 }
