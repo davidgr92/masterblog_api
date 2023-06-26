@@ -4,7 +4,6 @@ from flask_limiter.util import get_remote_address
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
-import json
 from storage import StorageJson
 
 app = Flask(__name__)
@@ -15,11 +14,6 @@ logging.basicConfig(level=logging.INFO,  # Configure basic logging
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 POST_KEYS = ["title", "content", "author", "date"]
-
-# TODO: Fix Javascript so that it opens a popup with a form
-#  and once form is sent, it sends an API request to update.
-#  (needs to auto populate a hidden ID field to know which post to update,
-#  also once finished loads all posts again)
 
 
 def validate_post_input(data):
