@@ -83,10 +83,12 @@ function deletePost(postId) {
     .catch(error => console.error('Error:', error));  // If an error occurs, log it to the console
 }
 
+// Function to show modal popup
 function openPopup(postId) {
     var modal = document.getElementById('myModal');
     modal.style.display = 'block';
 
+    // Sets the popup's form variables as empty and ID as the post ID
     var formId = document.getElementById('id');
     var formTitle = document.getElementById('title');
     var formContent = document.getElementById('content');
@@ -113,11 +115,13 @@ function openPopup(postId) {
     });
 }
 
+// Function to hide the modal popup
 function closePopup() {
     var modal = document.getElementById('myModal');
     modal.style.display = 'none';
 }
 
+// Function to submit the PUT request to the API to update a post
 function submitData(postId, title, content, author, date) {
     var baseUrl = document.getElementById('api-base-url').value;
 
@@ -138,7 +142,7 @@ function submitData(postId, title, content, author, date) {
     .then(response => response.json())
     .then(result => {
         console.log('Data submitted:', result);
-        loadPosts(); // Reload the posts after deleting one
+        loadPosts(); // Reload all posts after updating
     })
 
     .catch(error => console.error('Error:', error));

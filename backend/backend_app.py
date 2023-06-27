@@ -13,23 +13,31 @@ logging.basicConfig(level=logging.INFO,  # Configure basic logging
                     format='%(asctime)s %(levelname)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
-POST_KEYS = ["title", "content", "author", "date"]
+REQ_KEYS = ["title", "content", "author", "date"]
 
 
-def validate_post_input(data):
-    for key in POST_KEYS:
-        if key not in data:
+def validate_post_input(data_dict: dict) -> bool:
+    """Validate that all required keys are present in data dict.
+    Returns true if all required keys are present, otherwise returns false"""
+    for key in REQ_KEYS:
+        if key not in data_dict:
             return False
     return True
 
 
-def validate_sort_dir(sort, direction):
-    if sort in POST_KEYS and (direction == 'asc' or direction == 'desc'):
+def validate_sort_dir(sort: str, direction: str) -> bool:
+    """Validate that sort and direction query variables are viable.
+    Checks that sort is a key from the post keys,
+    Checks the direction is either 'asc' or 'desc'.
+    Returns true if the inputs are valid, otherwise returns false"""
+    if sort in REQ_KEYS and (direction == 'asc' or direction == 'desc'):
         return True
     return False
 
 
-def get_direction(direction):
+def get_direction(direction: str) -> bool:
+    """Convert viable direction variable to boolean.
+    'desc' => True, 'asc' => False"""
     if direction == "asc":
         return False
     else:
@@ -37,6 +45,9 @@ def get_direction(direction):
 
 
 def sort_posts(sort_key, reverse, posts_data):
+    """Gets a sort key, reverse and the posts data, returns a sorted version
+    of the posts data by the sort key and in the direction
+    (asc or desc) by reverse var"""
     if sort_key == "date":
         return sorted(posts_data, key=lambda x: datetime.
                       strptime(x[sort_key], '%Y-%m-%d'), reverse=reverse)
@@ -47,6 +58,9 @@ def sort_posts(sort_key, reverse, posts_data):
 @app.route('/api/posts', methods=['GET'])
 @limiter.limit("10/minute")  # Limit to 10 requests per minute
 def get_posts():
+    """Returns list of posts if sort and direction query vars are provided,
+    Returns the list sorted based on the variables.
+    If query params provided have invalid value returns an error"""
     app.logger.info('GET request received for /api/posts')
     posts_data = storage.list_posts()['posts']
 
@@ -67,6 +81,9 @@ def get_posts():
 @app.route('/api/posts', methods=['POST'])
 @limiter.limit("10/minute")  # Limit to 10 requests per minute
 def add_post():
+    """Adds a new post dict from the request to the persistent storage
+    Returns the new create post to the client.
+    If any of the required fields are missing return an error"""
     app.logger.info('POST request received for /api/posts')
     posts_data = storage.list_posts()['posts']
 
@@ -90,6 +107,8 @@ def add_post():
 @app.route('/api/posts/<int:post_id>', methods=['DELETE'])
 @limiter.limit("10/minute")  # Limit to 10 requests per minute
 def delete_post(post_id):
+    """Deletes a post with the provided id from the storage.
+    If post doesn't exist returns an error."""
     app.logger.info('DELETE request received for /api/posts/<post_id>')
 
     try:
@@ -105,6 +124,8 @@ def delete_post(post_id):
 @app.route('/api/posts/<int:post_id>', methods=['PUT'])
 @limiter.limit("10/minute")  # Limit to 10 requests per minute
 def update_post(post_id):
+    """Updates provided fields in the post with provided id.
+    If post doesn't exist returns an error."""
     app.logger.info('PUT request received for /api/posts/<post_id>')
 
     try:
@@ -121,6 +142,9 @@ def update_post(post_id):
 @app.route('/api/posts/search', methods=['GET'])
 @limiter.limit("10/minute")  # Limit to 10 requests per minute
 def search_posts():
+    """Filters the data from storage based on provided query variables.
+    If no variables given returns all data, if nothing was found
+    returns empty list."""
     app.logger.info('GET request received for /api/posts/search')
 
     title_query = request.args.get('title')

@@ -25,6 +25,7 @@ class StorageJson:
             return json.loads(file.read())
 
     def find_post_by_id(self, post_id) -> dict:
+        """Return post object based on provided id."""
         all_data = self.list_posts()
         posts_list = all_data['posts']
         posts_toc = all_data['toc']

@@ -84,10 +84,6 @@ input[type=submit] {
 }
 
 .post button {
-    /*position: absolute;
-    padding: 5px 10px;
-    top: 10px;
-    right: 10px;*/
     color: #fff;
     border: none;
     border-radius: 5px;
